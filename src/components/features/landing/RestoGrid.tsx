@@ -58,7 +58,7 @@ export function RestoGrid() {
           <button className="text-brand-orange font-bold hover:underline">View all</button>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {restaurants.map((resto, index) => (
             <RestaurantCard key={resto.id} restaurant={resto} index={index} />
           ))}

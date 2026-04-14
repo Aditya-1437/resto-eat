@@ -33,20 +33,20 @@ export function Hero() {
       <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-brand-orange/5 rounded-full blur-3xl -z-10" />
       <div className="absolute bottom-[10%] left-[-5%] w-[30%] h-[40%] bg-brand-orange/5 rounded-full blur-3xl -z-10" />
 
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center flex-1">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center flex-1">
         {/* Left Content (The Hook) */}
         <motion.div 
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="flex flex-col items-start"
+          className="flex flex-col items-start md:col-span-7"
         >
           <Badge variant="primary" className="mb-8 px-4 py-2 text-sm font-bold bg-white text-brand-orange border border-brand-orange/10 shadow-sm">
             Discover the New Taste
           </Badge>
           
-          <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.1] mb-8 tracking-tight">
+          <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold leading-[1.1] mb-8 tracking-tight">
             The best flavors of your city, delivered <span className="text-brand-orange italic">fresh.</span>
           </h1>
           
@@ -68,22 +68,38 @@ export function Hero() {
         </motion.div>
 
         {/* Right Side (The Hero Visual) */}
-        <div className="relative flex items-center justify-center">
+        <div className="relative flex items-center justify-center md:col-span-5">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1, ease: "circOut" }}
-            className="relative z-10"
+            className="relative z-10 w-full"
           >
-            <div className="relative w-[320px] h-[320px] md:w-[450px] md:h-[450px]">
-              <Image
-                src="/images/signature_dish.png"
-                alt="Signature Poke Bowl"
-                fill
-                className="object-contain drop-shadow-[0_35px_35px_rgba(0,0,0,0.15)]"
-                priority
-              />
+            <div className="relative w-full aspect-square md:h-[400px] md:aspect-auto max-w-[500px] mx-auto">
+              {/* Decorative Background Glows */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-brand-orange/10 rounded-full blur-[100px] -z-10 animate-pulse" />
+              
+              <motion.div
+                animate={{ 
+                  rotate: [0, 2, 0, -2, 0],
+                  y: [0, -10, 0, 10, 0]
+                }}
+                transition={{ 
+                  duration: 8, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+                className="w-full h-full"
+              >
+                <Image
+                  src="/images/hero_bowl.png"
+                  alt="Premium Poke Bowl"
+                  fill
+                  className="object-contain drop-shadow-[20px_40px_60px_rgba(0,0,0,0.15)] scale-110 mix-blend-multiply"
+                  priority
+                />
+              </motion.div>
             </div>
           </motion.div>
 

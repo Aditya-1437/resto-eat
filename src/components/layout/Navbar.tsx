@@ -11,6 +11,7 @@ import {
   ChevronDown, 
   UserCircle,
   X,
+  Menu,
   ArrowRight,
   Loader2,
   Check
@@ -18,15 +19,17 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
-  { label: "Explore", href: "#" },
-  { label: "Offers", href: "#" },
-  { label: "Track Order", href: "#" },
+  { label: "Explore", href: "#", secondary: false },
+  { label: "Offers", href: "#", secondary: true },
+  { label: "Partner", href: "#", secondary: true },
+  { label: "Track Order", href: "#", secondary: false },
 ];
 
 export function Navbar() {
   const [activeLink, setActiveLink] = useState("Explore");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   
   // Address Selection States
   const [isLocationOpen, setIsLocationOpen] = useState(false);
@@ -91,8 +94,8 @@ export function Navbar() {
           isCollapsed 
             ? "w-16 h-16 rounded-2xl flex items-center justify-center ml-auto mr-0 cursor-pointer hover:bg-white hover:scale-105" 
             : "max-w-7xl rounded-[2.5rem]",
-          isScrolled && !isCollapsed ? "py-2 px-4 md:px-6" : isCollapsed ? "p-0" : "py-3 px-6 md:px-8",
-          isLocationOpen && "ring-2 ring-brand-orange/20 bg-white/95 backdrop-blur-2xl px-6 md:px-10"
+          isScrolled && !isCollapsed ? "py-2 px-4 md:px-6" : isCollapsed ? "p-0" : "py-3 px-4 md:px-8",
+          isLocationOpen && "ring-2 ring-brand-orange/20 bg-white/95 backdrop-blur-2xl px-4 md:px-10"
         )}
       >
         <div className="relative flex flex-col w-full">
@@ -175,8 +178,8 @@ export function Navbar() {
                     </div>
                   </div>
 
-                  {/* Center Section: Links */}
-                  <nav className="hidden lg:flex items-center gap-8">
+                  {/* Center Section: Links (Restored for Laptop) */}
+                  <nav className="hidden lg:flex items-center gap-8 flex-1 justify-center">
                     {navLinks.map((link) => (
                       <a
                         key={link.label}
@@ -185,7 +188,10 @@ export function Navbar() {
                           e.stopPropagation();
                           setActiveLink(link.label);
                         }}
-                        className="relative text-sm font-bold text-gray-600 hover:text-brand-orange transition-colors"
+                        className={cn(
+                          "relative text-sm font-bold transition-colors",
+                          activeLink === link.label ? "text-brand-orange" : "text-gray-600 hover:text-brand-orange"
+                        )}
                       >
                         {link.label}
                         {activeLink === link.label && (
@@ -198,8 +204,11 @@ export function Navbar() {
                     ))}
                   </nav>
 
+                  {/* Spacer for Tablet/Mobile (where links are in hamburger) */}
+                  <div className="flex-1 lg:hidden" />
+
                   {/* Right Section: Actions */}
-                  <div className="flex items-center gap-1 md:gap-4">
+                  <div className="flex items-center gap-1 md:gap-3 lg:gap-6">
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
@@ -218,21 +227,21 @@ export function Navbar() {
                       <span className="absolute top-1 right-1 bg-red-500 w-2 h-2 rounded-full border border-white" />
                     </button>
 
-                    <button 
-                      onClick={(e) => e.stopPropagation()}
-                      className="p-2 text-gray-600 hover:text-brand-orange transition-colors md:hidden"
-                    >
-                      <UserCircle size={24} />
-                    </button>
-
-                    <div className="hidden md:flex items-center gap-2">
-                      <Button variant="ghost" className="text-brand-orange font-bold hover:bg-brand-orange/5">
+                    <div className="hidden md:flex items-center ml-2">
+                      <Button className="bg-brand-orange text-white hover:bg-brand-orange-hover rounded-full px-6 py-2.5 font-bold transition-all shadow-md shadow-brand-orange/10 hover:shadow-lg hover:shadow-brand-orange/20 hover:-translate-y-0.5 active:scale-95 text-sm">
                         Sign In
                       </Button>
-                      <Button className="bg-brand-orange text-white hover:bg-brand-orange-hover rounded-full px-6 shadow-md shadow-brand-orange/20">
-                        Get Started
-                      </Button>
                     </div>
+
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMenuOpen(true);
+                      }}
+                      className="p-2.5 bg-gray-50 text-gray-700 rounded-full hover:bg-brand-orange hover:text-white transition-all shadow-sm flex lg:hidden items-center justify-center"
+                    >
+                      <Menu size={22} strokeWidth={2.5} />
+                    </button>
                   </div>
                 </motion.div>
               )}
@@ -331,6 +340,65 @@ export function Navbar() {
           </AnimatePresence>
         </div>
       </motion.div>
+
+      {/* Hamburger Menu Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <div className="fixed inset-0 z-[60] pointer-events-auto">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMenuOpen(false)}
+              className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="absolute top-0 right-0 h-full w-full max-w-sm bg-white shadow-2xl p-8 flex flex-col"
+            >
+              <div className="flex items-center justify-between mb-12">
+                <Logo />
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-3 bg-gray-50 text-gray-500 rounded-full hover:bg-red-50 hover:text-red-500 transition-colors"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              <nav className="flex flex-col gap-6">
+                {navLinks.map((link, idx) => (
+                  <motion.a
+                    key={link.label}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    href={link.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-2xl font-extrabold text-gray-800 hover:text-brand-orange transition-colors flex items-center justify-between group"
+                  >
+                    {link.label}
+                    <ArrowRight className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-brand-orange" />
+                  </motion.a>
+                ))}
+              </nav>
+
+              <div className="mt-auto pt-8 border-t border-gray-100 flex flex-col gap-4">
+                <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Connect with us</p>
+                <div className="flex gap-4">
+                  {/* Placeholder social icons could go here */}
+                  <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 font-bold hover:bg-brand-orange hover:text-white transition-all cursor-pointer">fb</div>
+                  <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 font-bold hover:bg-brand-orange hover:text-white transition-all cursor-pointer">ig</div>
+                  <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 font-bold hover:bg-brand-orange hover:text-white transition-all cursor-pointer">tw</div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -17,6 +18,7 @@ import {
   Check
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { mockAuth, type AuthState } from "@/lib/auth";
 
 const navLinks = [
   { label: "Explore", href: "#", secondary: false },
@@ -39,6 +41,17 @@ export function Navbar() {
 
   // Collapse State
   const [isManualExpand, setIsManualExpand] = useState(false);
+  const [authState, setAuthState] = useState<AuthState>({ isLoggedIn: false });
+
+  useEffect(() => {
+    const checkAuth = () => {
+      setAuthState(mockAuth.getAuthState());
+    };
+    
+    checkAuth();
+    window.addEventListener("auth-change", checkAuth);
+    return () => window.removeEventListener("auth-change", checkAuth);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -228,9 +241,27 @@ export function Navbar() {
                     </button>
 
                     <div className="hidden md:flex items-center ml-2">
-                      <Button className="bg-brand-orange text-white hover:bg-brand-orange-hover rounded-full px-6 py-2.5 font-bold transition-all shadow-md shadow-brand-orange/10 hover:shadow-lg hover:shadow-brand-orange/20 hover:-translate-y-0.5 active:scale-95 text-sm">
-                        Sign In
-                      </Button>
+                      {authState.isLoggedIn ? (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            mockAuth.logout();
+                          }}
+                          className="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-full transition-all border border-gray-100 group"
+                          title="Click to Logout"
+                        >
+                          <div className="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange group-hover:bg-brand-orange group-hover:text-white transition-colors">
+                            <UserCircle size={18} />
+                          </div>
+                          <span className="text-sm font-bold text-gray-700">Hi, {authState.name?.split(" ")[0]}</span>
+                        </button>
+                      ) : (
+                        <Link href="/auth/signin">
+                          <Button className="bg-brand-orange text-white hover:bg-brand-orange-hover rounded-full px-6 py-2.5 font-bold transition-all shadow-md shadow-brand-orange/10 hover:shadow-lg hover:shadow-brand-orange/20 hover:-translate-y-0.5 active:scale-95 text-sm">
+                            Sign In
+                          </Button>
+                        </Link>
+                      )}
                     </div>
 
                     <button 

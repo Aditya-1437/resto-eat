@@ -4,6 +4,7 @@ import React from "react";
 import { Home, Search, ClipboardList, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { SearchDrawer } from "./SearchDrawer";
 
 const navItems = [
   { label: "Home", icon: Home, id: "home" },
@@ -14,6 +15,15 @@ const navItems = [
 
 export function BottomNav() {
   const [activeTab, setActiveTab] = React.useState("home");
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+
+  const handleTabClick = (id: string) => {
+    if (id === "search") {
+      setIsSearchOpen(true);
+    } else {
+      setActiveTab(id);
+    }
+  };
 
   return (
     <motion.div
@@ -30,7 +40,7 @@ export function BottomNav() {
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => handleTabClick(item.id)}
               className={cn(
                 "flex flex-col items-center gap-1.5 transition-all duration-300 relative",
                 isActive ? "text-brand-orange" : "text-gray-400"
@@ -48,6 +58,8 @@ export function BottomNav() {
           );
         })}
       </div>
+
+      <SearchDrawer isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </motion.div>
   );
 }

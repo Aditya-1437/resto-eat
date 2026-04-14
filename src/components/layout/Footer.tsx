@@ -1,91 +1,186 @@
+"use client";
+
 import React from "react";
+import { 
+  Camera, 
+  Send, 
+  Globe, 
+  Mail, 
+  ChevronDown 
+} from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
-import { Button } from "@/components/ui/Button";
-import { Smartphone, Play, Camera, Send, Globe } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const footerLinks = {
+  company: [
+    { name: "About Us", href: "#" },
+    { name: "Careers", href: "#" },
+    { name: "Press Kit", href: "#" },
+    { name: "Blog", href: "#" },
+  ],
+  support: [
+    { name: "Help Center", href: "#" },
+    { name: "Safety Center", href: "#" },
+    { name: "Community Guidelines", href: "#" },
+    { name: "Contact Us", href: "#" },
+  ],
+  partner: [
+    { name: "Join as Restaurant", href: "#" },
+    { name: "Join as Driver", href: "#" },
+    { name: "Business Accounts", href: "#" },
+    { name: "Refer a Friend", href: "#" },
+  ],
+};
+
+const socialIcons = [
+  { Icon: Camera, href: "#" },
+  { Icon: Send, href: "#" },
+  { Icon: Globe, href: "#" },
+  { Icon: Mail, href: "#" },
+];
 
 export function Footer() {
+  const [isLangOpen, setIsLangOpen] = React.useState(false);
+  const [language, setLanguage] = React.useState("English");
+
   return (
-    <footer className="bg-white border-t border-gray-100 pt-20 pb-10 px-6">
+    <footer className="bg-[#FFFFFF] pt-16 pb-12 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Dual CTA Sections */}
-        <div className="grid md:grid-cols-2 gap-8 mb-20">
-          <div className="bg-brand-orange rounded-[2rem] p-10 text-white flex flex-col items-start justify-between relative overflow-hidden group">
-            <div className="z-10">
-              <h3 className="text-3xl font-bold mb-4">Wanna partner with us?</h3>
-              <p className="text-white/80 mb-8 max-w-xs">
-                Join our network of restaurants and reach more hungry customers.
-              </p>
-              <Button className="bg-white text-brand-orange hover:bg-gray-100">
-                Join as Restaurant
-              </Button>
-            </div>
-            <div className="absolute right-[-20px] bottom-[-20px] opacity-10 group-hover:scale-110 transition-transform">
-              <Logo className="w-48 h-48" />
+        {/* Main Grid structure */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 space-y-10 md:space-y-0">
+          
+          {/* Column A (The Identity) */}
+          <div className="flex flex-col items-start gap-8">
+            <Logo className="text-brand-orange" />
+            <p className="text-gray-500 font-inter text-[15px] leading-relaxed max-w-xs">
+              Bringing the best flavors of your city directly to your door with speed and care.
+            </p>
+            <div className="flex items-center gap-5">
+              {socialIcons.map(({ Icon, href }, i) => (
+                <a 
+                  key={i} 
+                  href={href}
+                  className="text-gray-400 hover:text-brand-orange transition-colors duration-300"
+                >
+                  <Icon size={20} />
+                </a>
+              ))}
             </div>
           </div>
 
-          <div className="bg-gray-900 rounded-[2rem] p-10 text-white flex flex-col items-start justify-between relative overflow-hidden group">
-            <div className="z-10">
-              <h3 className="text-3xl font-bold mb-4">Ready to eat?</h3>
-              <p className="text-white/80 mb-8 max-w-xs">
-                Download the RestoEat app for the best experience and exclusive offers.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Button className="bg-white/10 hover:bg-white/20 flex items-center gap-2 backdrop-blur-sm">
-                  <Smartphone size={20} /> App Store
-                </Button>
-                <Button className="bg-white/10 hover:bg-white/20 flex items-center gap-2 backdrop-blur-sm">
-                  <Play size={20} /> Play Store
-                </Button>
+          {/* Column B (Company) */}
+          <div>
+            <h4 className="font-plus-jakarta text-[14px] font-bold uppercase tracking-widest text-gray-900 mb-8">
+              Company
+            </h4>
+            <ul className="space-y-4">
+              {footerLinks.company.map((link) => (
+                <li key={link.name}>
+                  <a 
+                    href={link.href}
+                    className="font-inter text-[15px] text-gray-500 hover:text-brand-orange transition-colors duration-200"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column C (Support) */}
+          <div>
+            <h4 className="font-plus-jakarta text-[14px] font-bold uppercase tracking-widest text-gray-900 mb-8">
+              Support
+            </h4>
+            <ul className="space-y-4">
+              {footerLinks.support.map((link) => (
+                <li key={link.name}>
+                  <a 
+                    href={link.href}
+                    className="font-inter text-[15px] text-gray-500 hover:text-brand-orange transition-colors duration-200"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column D (Partner) */}
+          <div>
+            <h4 className="font-plus-jakarta text-[14px] font-bold uppercase tracking-widest text-gray-900 mb-8">
+              Partner
+            </h4>
+            <ul className="space-y-4">
+              {footerLinks.partner.map((link) => (
+                <li key={link.name}>
+                  <a 
+                    href={link.href}
+                    className="font-inter text-[15px] text-gray-500 hover:text-brand-orange transition-colors duration-200"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Bar (The Legal) */}
+        <div className="border-t border-gray-100 pt-10">
+          <div className="flex flex-col lg:flex-row justify-between items-center gap-8">
+            <p className="text-gray-400 text-sm font-medium">
+              © 2026 RestoEat Technologies. All rights reserved.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-8 text-sm font-medium text-gray-400">
+              <a href="#" className="hover:text-brand-orange transition-colors">Terms</a>
+              <a href="#" className="hover:text-brand-orange transition-colors">Privacy</a>
+              <a href="#" className="hover:text-brand-orange transition-colors">Cookies</a>
+              
+              {/* Interactive Language Selector */}
+              <div className="relative">
+                <button 
+                  onClick={() => setIsLangOpen(!isLangOpen)}
+                  className="flex items-center gap-2 hover:text-brand-orange transition-colors group"
+                >
+                  <Globe size={16} />
+                  <span>Language: {language}</span>
+                  <ChevronDown 
+                    size={14} 
+                    className={`transition-transform duration-200 ${isLangOpen ? 'rotate-180' : ''}`}
+                  />
+                </button>
+
+                <AnimatePresence>
+                  {isLangOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute bottom-full mb-4 right-0 bg-white border border-gray-100 rounded-xl shadow-2xl p-2 min-w-[140px] z-50"
+                    >
+                      {["English", "Spanish", "French", "German"].map((lang) => (
+                        <button
+                          key={lang}
+                          onClick={() => {
+                            setLanguage(lang);
+                            setIsLangOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2.5 rounded-lg text-sm transition-colors ${
+                            language === lang 
+                              ? 'bg-brand-orange/5 text-brand-orange font-bold' 
+                              : 'text-gray-600 hover:bg-gray-50'
+                          }`}
+                        >
+                          {lang}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Global Footer Links */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 mb-16">
-          <div className="col-span-2 lg:col-span-2">
-            <Logo className="mb-6" />
-            <p className="text-muted-foreground mb-6 max-w-xs">
-              Bringing the best local flavors to your doorstep. Cravings satisfied in a click.
-            </p>
-            <div className="flex gap-4">
-              <a href="#" className="p-2 bg-gray-50 rounded-full text-gray-400 hover:text-brand-orange transition-colors">
-                <Send size={20} />
-              </a>
-              <a href="#" className="p-2 bg-gray-50 rounded-full text-gray-400 hover:text-brand-orange transition-colors">
-                <Camera size={20} />
-              </a>
-              <a href="#" className="p-2 bg-gray-50 rounded-full text-gray-400 hover:text-brand-orange transition-colors">
-                <Globe size={20} />
-              </a>
-            </div>
-          </div>
-          <div>
-            <h4 className="font-bold mb-6">Company</h4>
-            <ul className="space-y-4 text-muted-foreground">
-              <li><a href="#" className="hover:text-brand-orange">About Us</a></li>
-              <li><a href="#" className="hover:text-brand-orange">Careers</a></li>
-              <li><a href="#" className="hover:text-brand-orange">Blog</a></li>
-              <li><a href="#" className="hover:text-brand-orange">Contact</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold mb-6">Legal</h4>
-            <ul className="space-y-4 text-muted-foreground">
-              <li><a href="#" className="hover:text-brand-orange">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-brand-orange">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-brand-orange">Cookie Policy</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          <p>© 2026 RestoEat. All rights reserved.</p>
-          <div className="flex gap-8">
-            <a href="#" className="hover:text-brand-orange">Privacy</a>
-            <a href="#" className="hover:text-brand-orange">Terms</a>
-            <a href="#" className="hover:text-brand-orange">Security</a>
           </div>
         </div>
       </div>

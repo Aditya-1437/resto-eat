@@ -1,9 +1,9 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/features/landing/Hero";
-import { CategoryScroller } from "@/components/features/landing/CategoryScroller";
-import { RestoGrid } from "@/components/features/landing/RestoGrid";
+import { FeaturedRestaurants } from "@/components/features/landing/FeaturedRestaurants";
 import { TrustMarkers } from "@/components/features/landing/TrustMarkers";
+import { DualCTAs } from "@/components/features/landing/DualCTAs";
 
 export default function Home() {
   return (
@@ -11,9 +11,9 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <CategoryScroller />
-        <RestoGrid />
+        <FeaturedRestaurants />
         <TrustMarkers />
+        <DualCTAs />
       </main>
       <Footer />
     </div>

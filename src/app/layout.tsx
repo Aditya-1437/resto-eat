@@ -1,4 +1,6 @@
 import { BottomNav } from "@/components/layout/BottomNav";
+import { CartProvider } from "@/lib/cart-context";
+import { CartDrawer } from "@/components/features/cart/CartDrawer";
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
@@ -32,8 +34,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-inter">
-        {children}
-        <BottomNav />
+        <CartProvider>
+          {children}
+          <BottomNav />
+          <CartDrawer />
+        </CartProvider>
       </body>
     </html>
   );

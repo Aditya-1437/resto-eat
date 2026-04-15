@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { mockAuth, type AuthState } from "@/lib/auth";
+import { useCart } from "@/lib/cart-context";
 
 const navLinks = [
   { label: "Explore", href: "#", secondary: false },
@@ -42,6 +43,7 @@ export function Navbar() {
   // Collapse State
   const [isManualExpand, setIsManualExpand] = useState(false);
   const [authState, setAuthState] = useState<AuthState>({ isLoggedIn: false });
+  const { setIsOpen: setCartOpen, totalItems } = useCart();
 
   useEffect(() => {
     const checkAuth = () => {
@@ -233,11 +235,18 @@ export function Navbar() {
                     </button>
                     
                     <button 
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCartOpen(true);
+                      }}
                       className="p-2 text-gray-600 hover:text-brand-orange transition-colors relative"
                     >
                       <ShoppingBag className="w-5 h-5 md:w-5.5 md:h-5.5" />
-                      <span className="absolute top-1 right-1 bg-red-500 w-2 h-2 rounded-full border border-white" />
+                      {totalItems > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-brand-orange text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">
+                          {totalItems}
+                        </span>
+                      )}
                     </button>
 
                     <div className="hidden md:flex items-center ml-2">

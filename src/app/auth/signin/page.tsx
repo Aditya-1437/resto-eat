@@ -40,8 +40,8 @@ export default function SignInPage() {
     
     // Simulate API call
     setTimeout(() => {
-      // Mock login as Aditya
-      mockAuth.login("Aditya Kuncha");
+      // Login with actual email
+      mockAuth.login(email);
       setIsLoading(false);
       // Navigate back home
       router.push("/");

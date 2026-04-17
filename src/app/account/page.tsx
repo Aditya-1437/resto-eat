@@ -9,6 +9,7 @@ import { ProfileSection } from "@/components/features/account/ProfileSection";
 import { SecuritySection } from "@/components/features/account/SecuritySection";
 import { AddressManager } from "@/components/features/account/AddressManager";
 import { RewardsCard } from "@/components/features/account/RewardsCard";
+import { OrderHistory } from "@/components/features/account/OrderHistory";
 import { mockAuth } from "@/lib/auth";
 
 export default function AccountPage() {
@@ -27,7 +28,7 @@ export default function AccountPage() {
     
     // Check URL params for tab
     const tabParam = searchParams.get("tab") as AccountTab;
-    if (tabParam && ["profile", "security", "addresses", "payments", "rewards"].includes(tabParam)) {
+    if (tabParam && ["profile", "history", "security", "addresses", "payments", "rewards"].includes(tabParam)) {
       setActiveTab(tabParam);
     }
     
@@ -45,6 +46,7 @@ export default function AccountPage() {
   const renderContent = () => {
     switch (activeTab) {
       case "profile": return <ProfileSection />;
+      case "history": return <OrderHistory />;
       case "security": return <SecuritySection />;
       case "addresses": return <AddressManager />;
       case "rewards": return <RewardsCard />;

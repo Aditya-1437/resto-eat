@@ -5,9 +5,11 @@ import { motion } from "framer-motion";
 import { Save, User, Mail, Phone, Camera } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { mockAuth } from "@/lib/auth";
 
 export function ProfileSection() {
   const [isChanged, setIsChanged] = useState(false);
+  const authState = mockAuth.getAuthState();
 
   return (
     <div className="space-y-8 pb-20">
@@ -36,9 +38,9 @@ export function ProfileSection() {
                 <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-orange transition-colors" />
                 <input 
                   type="text" 
-                  defaultValue="Aditya Kuncha"
+                  defaultValue={authState.name || "User"}
                   onChange={() => setIsChanged(true)}
-                  className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 transition-all placeholder:text-gray-300"
+                  className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 transition-all placeholder:text-gray-300 capitalize"
                 />
             </div>
           </div>
@@ -48,7 +50,7 @@ export function ProfileSection() {
                 <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-orange transition-colors" />
                 <input 
                   type="email" 
-                  defaultValue="aditya@example.com"
+                  defaultValue={authState.email || "user@example.com"}
                   onChange={() => setIsChanged(true)}
                   className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 transition-all placeholder:text-gray-300"
                 />

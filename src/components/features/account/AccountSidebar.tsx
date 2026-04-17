@@ -8,10 +8,11 @@ import {
   MapPin, 
   CreditCard, 
   Gift, 
-  ChevronRight 
+  ChevronRight,
+  ShoppingBag
 } from "lucide-react";
 
-export type AccountTab = "profile" | "security" | "addresses" | "payments" | "rewards";
+export type AccountTab = "profile" | "history" | "security" | "addresses" | "payments" | "rewards";
 
 interface AccountSidebarProps {
   activeTab: AccountTab;
@@ -20,6 +21,7 @@ interface AccountSidebarProps {
 
 const navItems = [
   { id: "profile", label: "Profile", icon: User },
+  { id: "history", label: "Orders", icon: ShoppingBag },
   { id: "security", label: "Security", icon: ShieldCheck },
   { id: "addresses", label: "Addresses", icon: MapPin },
   { id: "payments", label: "Payments", icon: CreditCard },

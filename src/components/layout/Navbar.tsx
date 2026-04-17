@@ -18,6 +18,8 @@ import {
   Check
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { UserMenu } from "./UserMenu";
+
 import { mockAuth, type AuthState } from "@/lib/auth";
 import { useCart } from "@/lib/cart-context";
 
@@ -43,7 +45,21 @@ export function Navbar() {
   // Collapse State
   const [isManualExpand, setIsManualExpand] = useState(false);
   const [authState, setAuthState] = useState<AuthState>({ isLoggedIn: false });
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { setIsOpen: setCartOpen, totalItems } = useCart();
+
+  useEffect(() => {
+    const handleLogoutStart = () => setIsLoggingOut(true);
+    const handleLogoutEnd = () => setIsLoggingOut(false);
+    
+    window.addEventListener("resto-logout-start", handleLogoutStart);
+    window.addEventListener("resto-logout-end", handleLogoutEnd);
+    
+    return () => {
+      window.removeEventListener("resto-logout-start", handleLogoutStart);
+      window.removeEventListener("resto-logout-end", handleLogoutEnd);
+    };
+  }, []);
 
   useEffect(() => {
     const checkAuth = () => {
@@ -92,7 +108,7 @@ export function Navbar() {
     <motion.header
       initial={{ y: -100, opacity: 0 }}
       animate={{ 
-        y: isScrolled && !isLocationOpen && !isSearchOpen && !isManualExpand ? (typeof window !== "undefined" && window.innerWidth < 768 ? -120 : 0) : 0,
+        y: isCollapsed ? (typeof window !== "undefined" && window.innerWidth < 768 ? -120 : 0) : 0,
         opacity: 1 
       }}
       transition={{ duration: 0.8, type: "spring", damping: 20 }}
@@ -100,15 +116,25 @@ export function Navbar() {
         "fixed top-0 left-0 right-0 z-50 px-4 md:px-6 pt-4 pointer-events-none"
       )}
     >
+      <AnimatePresence>
+        {isLoggingOut && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-white/40 backdrop-blur-sm z-[-1] pointer-events-auto cursor-wait"
+          />
+        )}
+      </AnimatePresence>
       <motion.div 
         layout
         onClick={() => isCollapsed && setIsManualExpand(true)}
         className={cn(
-          "mx-auto transition-all duration-500 overflow-hidden pointer-events-auto cursor-default",
+          "mx-auto transition-all duration-500 pointer-events-auto cursor-default",
           "bg-white/80 backdrop-blur-md border border-white/20 shadow-lg",
           isCollapsed 
-            ? "w-16 h-16 rounded-2xl flex items-center justify-center ml-auto mr-0 cursor-pointer hover:bg-white hover:scale-105" 
-            : "max-w-7xl rounded-[2.5rem]",
+            ? "w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center ml-auto mr-0 cursor-pointer hover:bg-white hover:scale-105" 
+            : "max-w-7xl rounded-[2.5rem] overflow-visible",
           isScrolled && !isCollapsed ? "py-2 px-4 md:px-6" : isCollapsed ? "p-0" : "py-3 px-4 md:px-8",
           isLocationOpen && "ring-2 ring-brand-orange/20 bg-white/95 backdrop-blur-2xl px-4 md:px-10"
         )}
@@ -251,19 +277,7 @@ export function Navbar() {
 
                     <div className="hidden md:flex items-center ml-2">
                       {authState.isLoggedIn ? (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            mockAuth.logout();
-                          }}
-                          className="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-full transition-all border border-gray-100 group"
-                          title="Click to Logout"
-                        >
-                          <div className="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange group-hover:bg-brand-orange group-hover:text-white transition-colors">
-                            <UserCircle size={18} />
-                          </div>
-                          <span className="text-sm font-bold text-gray-700">Hi, {authState.name?.split(" ")[0]}</span>
-                        </button>
+                        <UserMenu userName={authState.name || "User"} />
                       ) : (
                         <Link href="/auth/signin">
                           <Button className="bg-brand-orange text-white hover:bg-brand-orange-hover rounded-full px-6 py-2.5 font-bold transition-all shadow-md shadow-brand-orange/10 hover:shadow-lg hover:shadow-brand-orange/20 hover:-translate-y-0.5 active:scale-95 text-sm">
@@ -424,9 +438,60 @@ export function Navbar() {
                     <ArrowRight className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-brand-orange" />
                   </motion.a>
                 ))}
+
+                {authState.isLoggedIn && (
+                  <>
+                    <div className="h-px bg-gray-100 my-2" />
+                    {[
+                      { label: "Profile", href: "/account" },
+                      { label: "Order History", href: "/account?tab=history" },
+                    ].map((link, idx) => (
+                      <motion.a
+                        key={link.label}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: (navLinks.length + idx) * 0.05 }}
+                        href={link.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="text-xl font-bold text-gray-500 hover:text-brand-orange transition-colors"
+                      >
+                        {link.label}
+                      </motion.a>
+                    ))}
+                    <motion.button
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: (navLinks.length + 3) * 0.05 }}
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        mockAuth.logout();
+                      }}
+                      className="text-xl font-bold text-red-400 hover:text-red-500 transition-colors text-left"
+                    >
+                      Logout
+                    </motion.button>
+                  </>
+                )}
               </nav>
 
               <div className="mt-auto pt-8 border-t border-gray-100 flex flex-col gap-4">
+                {authState.isLoggedIn ? (
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange">
+                      <UserCircle size={24} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">Signed in as</p>
+                      <p className="font-black text-gray-900">{authState.name}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <Link href="/auth/signin" className="w-full" onClick={() => setIsMenuOpen(false)}>
+                    <Button className="w-full bg-brand-orange text-white py-4 rounded-2xl font-bold text-lg">
+                      Sign In to RestoEat
+                    </Button>
+                  </Link>
+                )}
                 <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Connect with us</p>
                 <div className="flex gap-4">
                   {/* Placeholder social icons could go here */}

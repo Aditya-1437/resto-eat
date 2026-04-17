@@ -62,62 +62,73 @@ export function CartDrawer() {
             transition={{ type: "spring", damping: 30, stiffness: 300, mass: 0.8 }}
             className="absolute top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col"
           >
-            {/* Header: Smart Timer */}
+            {/* Header: Compact Smart Header */}
             <div className="p-6 border-b border-gray-100 bg-white sticky top-0 z-10">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-brand-orange/10 text-brand-orange rounded-full flex items-center justify-center">
-                    <ShoppingBag size={20} />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <div className="w-12 h-12 bg-gray-50 text-gray-900 rounded-2xl flex items-center justify-center border border-gray-100 shadow-sm">
+                      <ShoppingBag size={22} />
+                    </div>
+                    {totalItems > 0 && (
+                      <motion.div 
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="absolute -top-1 -right-1 w-5 h-5 bg-brand-orange text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-sm"
+                      >
+                        {totalItems}
+                      </motion.div>
+                    )}
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">Your Cart</h2>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                      {totalItems} {totalItems === 1 ? 'item' : 'items'} ready
-                    </p>
+                    <h2 className="text-xl font-black text-gray-900 tracking-tight leading-none mb-1.5">Your Cart</h2>
+                    <div className="flex items-center gap-2">
+                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                         Order Summary
+                       </p>
+                       <AnimatePresence>
+                         {items.length > 0 && (
+                           <>
+                             <div className="w-1 h-1 bg-gray-200 rounded-full" />
+                             <motion.div 
+                               initial={{ opacity: 0, x: -10 }}
+                               animate={{ opacity: 1, x: 0 }}
+                               exit={{ opacity: 0, x: -10 }}
+                               className="flex items-center gap-1.5 px-2.5 py-1 bg-brand-orange/5 rounded-full border border-brand-orange/10"
+                             >
+                               <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_4px_rgba(34,197,94,0.6)]" />
+                               <div className="flex items-center gap-1">
+                                 <Timer size={11} className="text-brand-orange" />
+                                 <span className="text-[10px] font-bold text-brand-orange/60 uppercase tracking-tight">Est. Arrival</span>
+                               </div>
+                               <div className="h-3.5 overflow-hidden relative">
+                                 <AnimatePresence mode="wait">
+                                   <motion.span
+                                     key={arrivalTimeStr}
+                                     initial={{ y: 8, opacity: 0 }}
+                                     animate={{ y: 0, opacity: 1 }}
+                                     exit={{ y: -8, opacity: 0 }}
+                                     transition={{ type: "spring", damping: 15, stiffness: 200 }}
+                                     className="text-[10px] font-black text-brand-orange uppercase tracking-tight block leading-none"
+                                   >
+                                     {arrivalTimeStr}
+                                   </motion.span>
+                                 </AnimatePresence>
+                               </div>
+                             </motion.div>
+                           </>
+                         )}
+                       </AnimatePresence>
+                    </div>
                   </div>
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 group"
+                  className="p-3 hover:bg-gray-100 rounded-2xl transition-all text-gray-400 group active:scale-90"
                 >
                   <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
                 </button>
               </div>
-
-              {/* Estimate Arrival Badge */}
-              <motion.div 
-                layout
-                className="bg-brand-orange/5 border border-brand-orange/10 rounded-2xl p-4 flex items-center justify-between overflow-hidden"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-brand-orange text-white rounded-xl shadow-lg shadow-brand-orange/20">
-                    <Timer size={18} />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-extrabold text-brand-orange uppercase tracking-wider leading-none mb-1">
-                      Est. Arrival
-                    </p>
-                    {/* Rolling Clock Animation */}
-                    <div className="h-6 overflow-hidden relative">
-                      <AnimatePresence mode="wait">
-                        <motion.span
-                          key={arrivalTimeStr}
-                          initial={{ y: 20, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          exit={{ y: -20, opacity: 0 }}
-                          transition={{ type: "spring", damping: 15, stiffness: 200 }}
-                          className="block text-lg font-black text-gray-900 leading-none"
-                        >
-                          {arrivalTimeStr}
-                        </motion.span>
-                      </AnimatePresence>
-                    </div>
-                  </div>
-                </div>
-                <div className="pr-2">
-                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
-                </div>
-              </motion.div>
             </div>
 
             {/* Scrollable Items */}
